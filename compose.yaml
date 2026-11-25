@@ -1,0 +1,16 @@
+services:
+  harness:
+    build: .
+    init: true
+    ports:
+      - "${DSH_BIND_ADDRESS:-127.0.0.1}:${DSH_PORT:-3080}:3080"
+    environment:
+      DSH_PUBLIC_URL: "${DSH_PUBLIC_URL:-http://localhost:3080}"
+      DSH_TRUSTED_HOST: "${DSH_TRUSTED_HOST:-localhost:3080}"
+    volumes:
+      - harness-data:/home/node/.dsh
+      - harness-workspace:/workspace
+
+volumes:
+  harness-data:
+  harness-workspace:
