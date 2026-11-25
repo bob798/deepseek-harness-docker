@@ -42,7 +42,7 @@ The container runs the Web UI. LiveShare requires its own configuration and a co
 
 ## Build the Intel macOS desktop DMG
 
-Run this on macOS with Xcode Command Line Tools, Node.js 24.22.3 or later in the 24.x series (or 26.13.1 or later), and pnpm 11.28.5. The script clones the pinned upstream release into `.build/upstream` and runs its Intel packaging command.
+Run this on macOS with Xcode Command Line Tools, Node.js 24.22.3 or later in the 24.x series (or 26.13.1 or later), and pnpm 11.28.5. Use a Node.js installation that includes the Node-API development headers. The script clones the pinned upstream release into `.build/upstream` and runs its Intel packaging command.
 
 ```sh
 ./build-macos-intel.sh
