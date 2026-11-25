@@ -1,0 +1,57 @@
+name: Build Intel macOS DMG
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/build-macos-intel.yml
+      - build-macos-intel.sh
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: macos-15-intel
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.28.5
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24.22.3
+
+      - name: Build unsigned Intel DMG
+        run: ./build-macos-intel.sh
+
+      - name: Verify DMG and generate checksum
+        shell: bash
+        run: |
+          cd .build/upstream/apps/desktop/.desktop-build/targets/mac-x64/unsigned-artifacts
+          shopt -s nullglob
+          images=(*-mac-x64-unsigned.dmg)
+          if [[ ${#images[@]} -ne 1 ]]; then
+            echo "Expected one unsigned Intel DMG, found ${#images[@]}" >&2
+            exit 1
+          fi
+          image=${images[0]}
+          hdiutil verify "$image"
+          shasum -a 256 "$image" > "$image.sha256"
+
+      - name: Upload Intel DMG and checksum
+        uses: actions/upload-artifact@v4
+        with:
+          name: deepseek-harness-macos-intel
+          path: |
+            .build/upstream/apps/desktop/.desktop-build/targets/mac-x64/unsigned-artifacts/*-mac-x64-unsigned.dmg
+            .build/upstream/apps/desktop/.desktop-build/targets/mac-x64/unsigned-artifacts/*-mac-x64-unsigned.dmg.sha256
+          include-hidden-files: true
+          if-no-files-found: error
+          compression-level: 0

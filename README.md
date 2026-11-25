@@ -49,3 +49,5 @@ Run this on macOS with Xcode Command Line Tools, Node.js 24.22.3 or later in the
 ```
 
 The upstream packager prints the DMG path when successful. This local build uses ad-hoc app signing and produces an unsigned, unnotarized DMG. DeepSeek also provides an [official Intel macOS download](https://download.deepseek.com/desktop/dsh-latest-macos-x64.dmg). See [discussion #8807](https://github.com/deepseek-ai/deepseek-harness/discussions/8807).
+
+GitHub Actions builds the Intel DMG when the build script or workflow changes on `main`. You can also start it from **Actions → Build Intel macOS DMG → Run workflow**. A successful run provides the DMG and its SHA-256 checksum in the `deepseek-harness-macos-intel` artifact.
